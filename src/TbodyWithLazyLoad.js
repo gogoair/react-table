@@ -49,7 +49,7 @@ export default class TbodyWithLazyLoad extends Component {
         height: rowHeight * pageSize,
       }}>
         <div
-          className={classnames(tBodyProps.className)}
+          className={classnames(tBodyProps.className, 'rt-tbody')}
           style={{
             ...tBodyProps.style,
             minWidth: `${rowMinWidth}px`,
