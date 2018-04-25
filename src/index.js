@@ -7,6 +7,8 @@ import Methods from './methods'
 import defaultProps from './defaultProps'
 import propTypes from './propTypes'
 
+import TbodyWithLazyLoad from './TbodyWithLazyLoad'
+
 export const ReactTableDefaults = defaultProps
 
 export default class ReactTable extends Methods(Lifecycle(Component)) {
@@ -130,6 +132,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       // Sorted Data
       sortedData,
       currentlyResizing,
+      // lazy loading mode
+      lazyLoadMode,
+      lazyLoadModePageSize,
+      rowHeight,
     } = resolvedState
 
     // Pagination
@@ -834,17 +840,29 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             {hasHeaderGroups ? makeHeaderGroups() : null}
             {makeHeaders()}
             {hasFilters ? makeFilters() : null}
-            <TbodyComponent
-              className={classnames(tBodyProps.className)}
-              style={{
-                ...tBodyProps.style,
-                minWidth: `${rowMinWidth}px`,
-              }}
-              {...tBodyProps.rest}
-            >
-              {pageRows.map((d, i) => makePageRow(d, i))}
-              {padRows.map(makePadRow)}
-            </TbodyComponent>
+
+            {lazyLoadMode && !showPagination
+              ? <TbodyWithLazyLoad
+                  tBodyProps={tBodyProps}
+                  rowMinWidth={rowMinWidth}
+                  pageRows={pageRows}
+                  makePageRow={makePageRow}
+                  dataLength={resolvedData.length}
+                  pageSize={lazyLoadModePageSize}
+                  rowHeight={rowHeight}
+              />
+              : <TbodyComponent
+                  className={classnames(tBodyProps.className)}
+                  style={{
+                    ...tBodyProps.style,
+                    minWidth: `${rowMinWidth}px`,
+                  }}
+                  {...tBodyProps.rest}
+              >
+                  {pageRows.map((d, i) => makePageRow(d, i))}
+                  {padRows.map(makePadRow)}
+              </TbodyComponent>}
+
             {hasColumnFooter ? makeColumnFooters() : null}
           </TableComponent>
           {showPagination && showPaginationBottom ? (
