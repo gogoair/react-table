@@ -137,6 +137,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       lazyLoadModePageSize,
       rowHeight,
       lazyLoadUniqueID,
+      reactListProps,
     } = resolvedState
 
     const TheadComponent = lazyLoadMode && !showPagination
@@ -281,7 +282,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             ...theadGroupProps.style,
             minWidth: `${rowMinWidth}px`,
           }}
-          lazyLoadUniqueID={lazyLoadMode ? lazyLoadUniqueID : undefined}
+          lazyLoadUniqueID={lazyLoadUniqueID}
           {...theadGroupProps.rest}
         >
           <TrComponent
@@ -373,7 +374,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             ...theadProps.style,
             minWidth: `${rowMinWidth}px`,
           }}
-          lazyLoadUniqueID={lazyLoadMode ? lazyLoadUniqueID : undefined}
+          lazyLoadUniqueID={lazyLoadUniqueID}
           {...theadProps.rest}
         >
           <TrComponent
@@ -462,7 +463,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             ...theadFilterProps.style,
             minWidth: `${rowMinWidth}px`,
           }}
-          lazyLoadUniqueID={lazyLoadMode ? lazyLoadUniqueID : undefined}
+          lazyLoadUniqueID={lazyLoadUniqueID}
           {...theadFilterProps.rest}
         >
           <TrComponent
@@ -477,6 +478,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
 
     const makePageRow = (row, i, path = []) => {
+      if (!row) return
+
       const rowInfo = {
         original: row[originalKey],
         row,
@@ -864,6 +867,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   pageSize={lazyLoadModePageSize}
                   rowHeight={rowHeight}
                   lazyLoadUniqueID={lazyLoadUniqueID}
+                  reactListProps={reactListProps}
               />
               : <TbodyComponent
                   className={classnames(tBodyProps.className)}
