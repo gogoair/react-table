@@ -137,6 +137,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       lazyLoadModePageSize,
       rowHeight,
       lazyLoadUniqueID,
+      reactListProps,
     } = resolvedState
 
     const TheadComponent = lazyLoadMode && !showPagination
@@ -864,6 +865,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   pageSize={lazyLoadModePageSize}
                   rowHeight={rowHeight}
                   lazyLoadUniqueID={lazyLoadUniqueID}
+                  reactListProps={reactListProps}
               />
               : <TbodyComponent
                   className={classnames(tBodyProps.className)}
