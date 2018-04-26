@@ -54,6 +54,7 @@ export default class TbodyWithLazyLoad extends Component {
       dataLength,
       rowHeight,
       pageSize,
+      reactListProps,
     } = this.props
 
     return (
@@ -80,6 +81,7 @@ export default class TbodyWithLazyLoad extends Component {
             length={dataLength}
             type='uniform'
             useStaticSize
+            {...reactListProps}
           />
         </div>
       </div>
