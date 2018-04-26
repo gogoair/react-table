@@ -7,6 +7,9 @@ import Methods from './methods'
 import defaultProps from './defaultProps'
 import propTypes from './propTypes'
 
+import TbodyWithLazyLoad from './lazyLoad/TbodyWithLazyLoad'
+import TheadWithLazyLoad from './lazyLoad/TheadWithLazyLoad';
+
 export const ReactTableDefaults = defaultProps
 
 export default class ReactTable extends Methods(Lifecycle(Component)) {
@@ -104,7 +107,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       onExpandedChange,
       // Components
       TableComponent,
-      TheadComponent,
       TbodyComponent,
       TrGroupComponent,
       TrComponent,
@@ -130,7 +132,17 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       // Sorted Data
       sortedData,
       currentlyResizing,
+      // lazy loading mode
+      lazyLoadMode,
+      lazyLoadModePageSize,
+      rowHeight,
+      lazyLoadUniqueID,
+      reactListProps,
     } = resolvedState
+
+    const TheadComponent = lazyLoadMode && !showPagination
+      ? TheadWithLazyLoad
+      : resolvedState.TheadComponent
 
     // Pagination
     const startRow = pageSize * page
@@ -270,6 +282,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             ...theadGroupProps.style,
             minWidth: `${rowMinWidth}px`,
           }}
+          lazyLoadUniqueID={lazyLoadUniqueID}
           {...theadGroupProps.rest}
         >
           <TrComponent
@@ -361,6 +374,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             ...theadProps.style,
             minWidth: `${rowMinWidth}px`,
           }}
+          lazyLoadUniqueID={lazyLoadUniqueID}
           {...theadProps.rest}
         >
           <TrComponent
@@ -449,6 +463,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             ...theadFilterProps.style,
             minWidth: `${rowMinWidth}px`,
           }}
+          lazyLoadUniqueID={lazyLoadUniqueID}
           {...theadFilterProps.rest}
         >
           <TrComponent
@@ -463,6 +478,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
 
     const makePageRow = (row, i, path = []) => {
+      if (!row) return
+
       const rowInfo = {
         original: row[originalKey],
         row,
@@ -479,8 +496,13 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const isExpanded = _.get(expanded, rowInfo.nestingPath)
       const trGroupProps = getTrGroupProps(finalState, rowInfo, undefined, this)
       const trProps = _.splitProps(getTrProps(finalState, rowInfo, undefined, this))
+      const trGroupStyle = lazyLoadMode ? {
+        ...trGroupProps.style,
+        height: rowHeight,
+      } : trGroupProps.style;
+
       return (
-        <TrGroupComponent key={rowInfo.nestingPath.join('_')} {...trGroupProps}>
+        <TrGroupComponent key={rowInfo.nestingPath.join('_')} style={trGroupStyle} {...trGroupProps}>
           <TrComponent
             className={classnames(trProps.className, row._viewIndex % 2 ? '-even' : '-odd')}
             style={trProps.style}
@@ -834,17 +856,31 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             {hasHeaderGroups ? makeHeaderGroups() : null}
             {makeHeaders()}
             {hasFilters ? makeFilters() : null}
-            <TbodyComponent
-              className={classnames(tBodyProps.className)}
-              style={{
-                ...tBodyProps.style,
-                minWidth: `${rowMinWidth}px`,
-              }}
-              {...tBodyProps.rest}
-            >
-              {pageRows.map((d, i) => makePageRow(d, i))}
-              {padRows.map(makePadRow)}
-            </TbodyComponent>
+
+            {lazyLoadMode && !showPagination
+              ? <TbodyWithLazyLoad
+                  tBodyProps={tBodyProps}
+                  rowMinWidth={rowMinWidth}
+                  pageRows={pageRows}
+                  makePageRow={makePageRow}
+                  dataLength={resolvedData.length}
+                  pageSize={lazyLoadModePageSize}
+                  rowHeight={rowHeight}
+                  lazyLoadUniqueID={lazyLoadUniqueID}
+                  reactListProps={reactListProps}
+              />
+              : <TbodyComponent
+                  className={classnames(tBodyProps.className)}
+                  style={{
+                    ...tBodyProps.style,
+                    minWidth: `${rowMinWidth}px`,
+                  }}
+                  {...tBodyProps.rest}
+              >
+                  {pageRows.map((d, i) => makePageRow(d, i))}
+                  {padRows.map(makePadRow)}
+              </TbodyComponent>}
+
             {hasColumnFooter ? makeColumnFooters() : null}
           </TableComponent>
           {showPagination && showPaginationBottom ? (
