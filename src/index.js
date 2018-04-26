@@ -282,7 +282,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             ...theadGroupProps.style,
             minWidth: `${rowMinWidth}px`,
           }}
-          lazyLoadUniqueID={lazyLoadMode ? lazyLoadUniqueID : undefined}
+          lazyLoadUniqueID={lazyLoadMode && !showPagination
+            ? lazyLoadUniqueID
+            : undefined}
           {...theadGroupProps.rest}
         >
           <TrComponent
@@ -374,7 +376,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             ...theadProps.style,
             minWidth: `${rowMinWidth}px`,
           }}
-          lazyLoadUniqueID={lazyLoadMode ? lazyLoadUniqueID : undefined}
+          lazyLoadUniqueID={lazyLoadMode && !showPagination
+            ? lazyLoadUniqueID
+            : undefined}
           {...theadProps.rest}
         >
           <TrComponent
@@ -463,7 +467,9 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             ...theadFilterProps.style,
             minWidth: `${rowMinWidth}px`,
           }}
-          lazyLoadUniqueID={lazyLoadMode ? lazyLoadUniqueID : undefined}
+          lazyLoadUniqueID={lazyLoadMode && !showPagination
+            ? lazyLoadUniqueID
+            : undefined}
           {...theadFilterProps.rest}
         >
           <TrComponent
