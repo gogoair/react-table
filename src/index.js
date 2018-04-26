@@ -478,6 +478,8 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
     }
 
     const makePageRow = (row, i, path = []) => {
+      if (!row) return
+
       const rowInfo = {
         original: row[originalKey],
         row,
