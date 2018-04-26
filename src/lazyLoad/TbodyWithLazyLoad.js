@@ -57,12 +57,14 @@ export default class TbodyWithLazyLoad extends Component {
       reactListProps,
     } = this.props
 
+    const height = dataLength > pageSize ? rowHeight * pageSize : rowHeight * (dataLength + 1);
+
     return (
       <div
         style={{
           overflow: 'auto',
           flex: 'none',
-          height: rowHeight * pageSize,
+          height,
         }}
         onScroll={this.trackScroll}
       >
