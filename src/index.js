@@ -7,7 +7,8 @@ import Methods from './methods'
 import defaultProps from './defaultProps'
 import propTypes from './propTypes'
 
-import TbodyWithLazyLoad from './TbodyWithLazyLoad'
+import TbodyWithLazyLoad from './lazyLoad/TbodyWithLazyLoad'
+import TheadWithLazyLoad from './lazyLoad/TheadWithLazyLoad';
 
 export const ReactTableDefaults = defaultProps
 
@@ -106,7 +107,6 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       onExpandedChange,
       // Components
       TableComponent,
-      TheadComponent,
       TbodyComponent,
       TrGroupComponent,
       TrComponent,
@@ -136,7 +136,12 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       lazyLoadMode,
       lazyLoadModePageSize,
       rowHeight,
+      lazyLoadUniqueID,
     } = resolvedState
+
+    const TheadComponent = lazyLoadMode && !showPagination
+      ? TheadWithLazyLoad
+      : resolvedState.TheadComponent
 
     // Pagination
     const startRow = pageSize * page
@@ -276,6 +281,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             ...theadGroupProps.style,
             minWidth: `${rowMinWidth}px`,
           }}
+          lazyLoadUniqueID={lazyLoadMode ? lazyLoadUniqueID : undefined}
           {...theadGroupProps.rest}
         >
           <TrComponent
@@ -367,6 +373,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             ...theadProps.style,
             minWidth: `${rowMinWidth}px`,
           }}
+          lazyLoadUniqueID={lazyLoadMode ? lazyLoadUniqueID : undefined}
           {...theadProps.rest}
         >
           <TrComponent
@@ -455,6 +462,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
             ...theadFilterProps.style,
             minWidth: `${rowMinWidth}px`,
           }}
+          lazyLoadUniqueID={lazyLoadMode ? lazyLoadUniqueID : undefined}
           {...theadFilterProps.rest}
         >
           <TrComponent
@@ -855,6 +863,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   dataLength={resolvedData.length}
                   pageSize={lazyLoadModePageSize}
                   rowHeight={rowHeight}
+                  lazyLoadUniqueID={lazyLoadUniqueID}
               />
               : <TbodyComponent
                   className={classnames(tBodyProps.className)}

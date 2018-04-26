@@ -9,6 +9,7 @@ export default class TbodyWithLazyLoad extends Component {
 
     this.rowsRenderer = this.rowsRenderer.bind(this)
     this.rowRenderer = this.rowRenderer.bind(this)
+    this.trackScroll = this.trackScroll.bind(this)
   }
 
   static propTypes = {
@@ -19,7 +20,20 @@ export default class TbodyWithLazyLoad extends Component {
     dataLength: PropTypes.number,
     rowHeight: PropTypes.number,
     pageSize: PropTypes.number,
+    lazyLoadUniqueID: PropTypes.any.isRequired,
   }
+
+  trackScroll (event) {
+    const eventName = `tbodyscroll${this.props.lazyLoadUniqueID}`;
+    const horizontalScrollEvent = new CustomEvent(eventName, {
+      detail: {
+        horizontalScroll: event.target.scrollLeft,
+      },
+    });
+
+    document.dispatchEvent(horizontalScrollEvent);
+  }
+
 
   rowsRenderer (items, ref) {
     return (
@@ -43,11 +57,14 @@ export default class TbodyWithLazyLoad extends Component {
     } = this.props
 
     return (
-      <div style={{
-        overflow: 'auto',
-        flex: 'none',
-        height: rowHeight * pageSize,
-      }}>
+      <div
+        style={{
+          overflow: 'auto',
+          flex: 'none',
+          height: rowHeight * pageSize,
+        }}
+        onScroll={this.trackScroll}
+      >
         <div
           className={classnames(tBodyProps.className, 'rt-tbody')}
           style={{
