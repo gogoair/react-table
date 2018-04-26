@@ -124,7 +124,7 @@ function makeTemplateComponent (compClass, displayName) {
   if (!displayName) {
     throw new Error('No displayName found for template component:', compClass)
   }
-  const cmp = ({ children, className, ...rest }) => (
+  const cmp = ({ children, className, lazyLoadUniqueID, ...rest }) => (
     <div className={classnames(compClass, className)} {...rest}>
       {children}
     </div>
