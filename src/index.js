@@ -505,7 +505,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
       const isExpanded = _.get(expanded, rowInfo.nestingPath)
       const trGroupProps = getTrGroupProps(finalState, rowInfo, undefined, this)
       const trProps = _.splitProps(getTrProps(finalState, rowInfo, undefined, this))
-      const trGroupStyle = lazyLoadMode ? {
+      const trGroupStyle = lazyLoadMode && !showPagination ? {
         ...trGroupProps.style,
         height: rowHeight,
       } : trGroupProps.style;
