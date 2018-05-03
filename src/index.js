@@ -872,7 +872,7 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
                   rowMinWidth={rowMinWidth}
                   pageRows={pageRows}
                   makePageRow={makePageRow}
-                  dataLength={resolvedData.length}
+                  dataLength={sortedData.length}
                   pageSize={lazyLoadModePageSize}
                   rowHeight={rowHeight}
                   lazyLoadUniqueID={lazyLoadUniqueID}
