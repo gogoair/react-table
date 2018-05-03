@@ -287,7 +287,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         >
           <TrComponent
             className={theadGroupTrProps.className}
-            style={theadGroupTrProps.style}
+            style={{
+              ...theadGroupTrProps.style,
+              width: lazyLoadMode ? 'calc(100% - 15px)' : '100%'
+            }}
             {...theadGroupTrProps.rest}
           >
             {headerGroups.map(makeHeaderGroup)}
@@ -379,7 +382,10 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
         >
           <TrComponent
             className={theadTrProps.className}
-            style={theadTrProps.style}
+            style={{
+              ...theadTrProps.style,
+              width: lazyLoadMode ? 'calc(100% - 15px)' : '100%'
+            }}
             {...theadTrProps.rest}
           >
             {allVisibleColumns.map(makeHeader)}
@@ -461,14 +467,17 @@ export default class ReactTable extends Methods(Lifecycle(Component)) {
           className={classnames('-filters', theadFilterProps.className)}
           style={{
             ...theadFilterProps.style,
-            minWidth: `${rowMinWidth}px`,
+            minWidth: `${rowMinWidth}px`
           }}
           lazyLoadUniqueID={lazyLoadUniqueID}
           {...theadFilterProps.rest}
         >
           <TrComponent
             className={theadFilterTrProps.className}
-            style={theadFilterTrProps.style}
+            style={{
+              ...theadFilterTrProps.style,
+              width: lazyLoadMode ? 'calc(100% - 15px)' : '100%' // offset for tbody scrollbar
+            }}
             {...theadFilterTrProps.rest}
           >
             {allVisibleColumns.map(makeFilter)}
