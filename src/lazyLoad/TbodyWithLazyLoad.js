@@ -57,7 +57,7 @@ export default class TbodyWithLazyLoad extends Component {
       reactListProps,
     } = this.props
 
-    const height = dataLength > pageSize ? rowHeight * pageSize : rowHeight * (dataLength + 1);
+    const height = dataLength > pageSize ? rowHeight * pageSize : "auto";
 
     return (
       <div
